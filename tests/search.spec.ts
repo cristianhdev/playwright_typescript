@@ -44,7 +44,6 @@ test('usuario puede marcar todas las tareas de la lista como completas', async (
 
     const tasks_complete = tasks.filter({ has:page.locator('.todo-content.completed') });
 
-
     await expect(tasks, 'Debe haber exactamente 5 tareas en la lista').toHaveCount(5);
     await expect(tasks_complete, 'Todas las tareas deben estar marcadas como completas').toHaveCount(5);
   
@@ -96,7 +95,7 @@ test('usuario puede eliminar tareas de la lista', async ({ page, webPage }) => {
   });
 
 
-  await test.step('Entonces la tarea no debe mostrarse en la lista', async () => {
+  await test.step('Entonces la tarea no debe mostrarse el item en la lista', async () => {
     const task = webPage.page.getByRole('listitem').filter({ hasText: 'test1' });
     await expect(task,"Se espera que la tarea eliminada no este en la lista").not.toBeVisible();
   });
