@@ -1,6 +1,8 @@
 import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
 
+declare const process: { env: { CI?: string } };
+
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -13,7 +15,8 @@ import { devices } from '@playwright/test';
 const config: PlaywrightTestConfig = {
   testDir: './tests',
   /* Maximum time one test can run for. */
-  timeout: 30 * 1000,
+    // Test completo
+  timeout: 60_000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
@@ -28,7 +31,7 @@ const config: PlaywrightTestConfig = {
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 4 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter:[
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
@@ -36,27 +39,37 @@ const config: PlaywrightTestConfig = {
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
-    actionTimeout: 0,
+     // Acciones
+      /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
+    actionTimeout: 10_000,
+
+    // Navegaciones
+    
+    navigationTimeout: 30_000,
+    locale:"es-ES",
+    /*testIdAttribute: "data-test",*/
+   
+  
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: "https://todo.uiineed.com/",
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-     trace: 'retain-on-failure',
+    trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     viewport: null,
     launchOptions: {
+      slowMo: 0,
+      timeout: 30_000,
       args: ['--start-maximized'],
     },
   },
-
   /* Configure projects for major browsers */
   projects: [
     {
       name: 'chromium',
       use: {
-        ...devices['Desktop Chrome'],
+        ...devices['Chrome'],
       },
     },
 
@@ -95,10 +108,10 @@ const config: PlaywrightTestConfig = {
     //     channel: 'msedge',
     //   },
     // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: {
-    //     channel: 'chrome',
+    //{
+    // name: 'Google Chrome',
+    // use: {
+    // channel: 'chrome',
     //   },
     // },
   ],

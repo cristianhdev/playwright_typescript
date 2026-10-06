@@ -1,14 +1,21 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures/pages.fixture';
+import { Hooks } from '../hooks/init';
 
+Hooks.init();
 
+/*test.afterEach(async () => {
+  await fs.rm('downloads', {
+    recursive: true,
+    force: true,
+  });
+});]*/
 
 //usuario puede agregar tareas a la lista
 
-test('usuario puede agregar tareas a la lista', async ({ page, webPage }) => {
+test('usuario puede agregar tareas a la lista', async ({ page, webPage, utils }) => {
 
-
-
+ 
   await test.step('Cuando el usuario ingresa la tarea', async () => {
     await webPage.addTask('test1');
   });
@@ -17,13 +24,13 @@ test('usuario puede agregar tareas a la lista', async ({ page, webPage }) => {
   await test.step('Entonces la tarea se debe mostrar en la lista', async () => {
     const task = webPage.page.getByRole('listitem').filter({ hasText: 'test1' });
     await expect(task).toBeVisible();
+    await utils.takeScreenshot(page, 'agregar_tareas_a_la_lista');
   });
-
 });
 
 
 
-test('usuario puede marcar todas las tareas de la lista como completas', async ({ page, webPage }) => {
+test('usuario puede marcar todas las tareas de la lista como completas', async ({ page, webPage, utils }) => {
 
 
   await test.step('Cuando el usuario ingresa las tareas', async () => {
@@ -42,18 +49,19 @@ test('usuario puede marcar todas las tareas de la lista como completas', async (
   await test.step('Entonces debe visulizar la tarea como marcada', async () => {
     const tasks = page.locator('.todo-item');
 
-    const tasks_complete = tasks.filter({ has:page.locator('.todo-content.completed') });
+    const tasks_complete = tasks.filter({ has: page.locator('.todo-content.completed') });
 
     await expect(tasks, 'Debe haber exactamente 5 tareas en la lista').toHaveCount(5);
     await expect(tasks_complete, 'Todas las tareas deben estar marcadas como completas').toHaveCount(5);
-  
+    await utils.takeScreenshot(page, 'marcar_todas_las_tareas_de_la_lista_como_completas');
   });
+
+
 
 });
 
-test('usuario puede marcar como completado una tarea de la lista', async ({ page, webPage }) => {
+test('usuario puede marcar como completado una tarea de la lista', async ({ page, webPage, utils }) => {
 
-  test.slow();
 
   await test.step('Cuando el usuario ingresa la tarea', async () => {
     await webPage.addTask('test1');
@@ -70,11 +78,12 @@ test('usuario puede marcar como completado una tarea de la lista', async ({ page
     });
     await expect(task).toHaveClass(/completed/);
     await expect(page.getByAltText("Mark as Incomplete")).toHaveClass(/icon-finish/);
+    await utils.takeScreenshot(page, 'marcar_como_completado_una_tarea_de_la_list');
   });
 
 });
 
-test('usuario puede eliminar tareas de la lista', async ({ page, webPage }) => {
+test('usuario puede eliminar tareas de la lista', async ({ page, webPage, utils }) => {
 
 
   await test.step('Dado que el usuario esta en la pagina de todo-list', async () => {
@@ -97,8 +106,49 @@ test('usuario puede eliminar tareas de la lista', async ({ page, webPage }) => {
 
   await test.step('Entonces la tarea no debe mostrarse el item en la lista', async () => {
     const task = webPage.page.getByRole('listitem').filter({ hasText: 'test1' });
-    await expect(task,"Se espera que la tarea eliminada no este en la lista").not.toBeVisible();
+    await expect(task, "Se espera que la tarea eliminada no este en la lista").not.toBeVisible();
+    await utils.takeScreenshot(page, 'eliminar_tareas_de_la_lista');
   });
 
 });
 
+
+// test para validar exportar tareas
+test('usuario puede exportar la lista de tareas', async ({ page, webPage, utils }) => {
+
+  let path: string | null = null;
+
+  await test.step('Cuando el usuario ingresa las tareas', async () => {
+    const tasks = ['test1', 'test2', 'test3'];
+    for (const task of tasks) {
+      await webPage.fillSearchInput(task);
+      await webPage.clickAddButton();
+    }
+  });
+
+  await test.step('Y el usuario exporta el registro de tareas', async () => {
+    const downloadPromise = page.waitForEvent('download');
+
+    await page.getByRole('button', { name: 'Export data' }).click();
+
+    const download = await downloadPromise;
+    const filePath = 'downloads/tareas_exportadas.txt';
+
+    await download.saveAs(filePath);
+    path = filePath;
+  });
+
+  await test.step('Entonces el archivo debe descargarse correctamente', async () => {
+    expect(path).not.toBeNull();
+    await utils.generatePDF(page, 'exportar_tareas_de_la_lista');
+  });
+
+});
+/*
+| Hook         | Cuándo se ejecuta                  | Alcance | Uso típico                       |
+| ------------ | ---------------------------------- | ------- | -------------------------------- |
+| `beforeAll`  | Una vez antes de todos los tests   | Suite   | Preparar recursos globales       |
+| `afterAll`   | Una vez después de todos los tests | Suite   | Liberar recursos globales        |
+| `beforeEach` | Antes de cada test                 | Test    | Login, navegación, configuración |
+| `afterEach`  | Después de cada test               | Test    | Limpieza, evidencias, logs       |
+ */
