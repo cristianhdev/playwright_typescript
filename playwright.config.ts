@@ -66,12 +66,12 @@ const config: PlaywrightTestConfig = {
   },
   /* Configure projects for major browsers */
   projects: [
-    {
-      name: 'chromium',
-      use: {
-        ...devices['Chrome'],
-      },
-    },
+    //{
+    //  name: 'chromium',
+    //  use: {
+    //    ...devices['Chrome'],
+    //  },
+    //},
 
     // {
     //   name: 'firefox',
@@ -102,12 +102,12 @@ const config: PlaywrightTestConfig = {
     // },
 
     /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: {
-    //     channel: 'msedge',
-    //   },
-    // },
+     {
+       name: 'Microsoft Edge',
+       use: {
+         channel: 'msedge',
+       },
+     },
     //{
     // name: 'Google Chrome',
     // use: {

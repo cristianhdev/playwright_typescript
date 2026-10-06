@@ -13,9 +13,9 @@ Hooks.init();
 
 //usuario puede agregar tareas a la lista
 
-test('usuario puede agregar tareas a la lista', async ({ page, webPage, utils }) => {
+test('usuario puede agregar tareas a la lista', { tag: ["@regression", "@smoke"] }, async ({ page, webPage, utils  }) => {
 
- 
+
   await test.step('Cuando el usuario ingresa la tarea', async () => {
     await webPage.addTask('test1');
   });
@@ -83,7 +83,7 @@ test('usuario puede marcar como completado una tarea de la lista', async ({ page
 
 });
 
-test('usuario puede eliminar tareas de la lista', async ({ page, webPage, utils }) => {
+test('usuario puede eliminar tareas de la lista', { tag: "@smoke" }, async ({ page, webPage, utils }) => {
 
 
   await test.step('Dado que el usuario esta en la pagina de todo-list', async () => {
@@ -113,8 +113,24 @@ test('usuario puede eliminar tareas de la lista', async ({ page, webPage, utils 
 });
 
 
+test.describe('usuario puede buscar tareas en la lista', () => {
+  test.skip(({ browserName }) => browserName !== 'chromium', 'Chromium only!');
+
+  test('usuario puede buscar tareas en la lista', async ({ page, webPage, utils }) => {
+
+    await test.step('Cuando el usuario ingresa las tareas', async () => {
+      const tasks = ['test1', 'test2', 'test3', 'test4', 'test5'];
+      for (const task of tasks) {
+        await webPage.fillSearchInput(task);
+        await webPage.clickAddButton();
+      }
+    });
+  })
+});
+
 // test para validar exportar tareas
 test('usuario puede exportar la lista de tareas', async ({ page, webPage, utils }) => {
+
 
   let path: string | null = null;
 

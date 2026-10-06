@@ -1,24 +1,47 @@
-import {test} from '../fixtures/pages.fixture';
+import { test } from '../fixtures/pages.fixture';
 
 export class Hooks {
 
-   static init() {
-    test.beforeEach(async ({page,utils}) => {
-       console.log('🔵 [HOOK] beforeEach ejecutado');
-       //await utils.takeScreenshot(page, `page_capture_beforeEach_${Date.now()}`);
+  static init() {
+
+    test.beforeEach(async ({ browser, browserName }, testInfo) => {
+      testInfo.annotations.push(
+        {
+          type: 'browser',
+          description: browserName,
+        },
+        {
+          type: 'browser version',
+          description: browser.version(),
+        },
+        {
+          type: 'timestamp',
+          description: new Date().toISOString(),
+        },
+        {
+          type: 'test',
+          description: testInfo.title,
+        }
+      );
+
+      console.log(`🌐 Browser: ${browserName}`);
+      console.log(`🔢 Version: ${browser.version()}`);
+      console.log(`⏰ Timestamp: ${new Date().toISOString()}`);
+      console.log('🔵 [HOOK] beforeEach ejecutado');
+      //await utils.takeScreenshot(page, `page_capture_beforeEach_${Date.now()}`);
     });
 
-    test.afterEach(async ({page,utils}) => {
-        console.log('🔵 [HOOK] afterEach ejecutado');
-        //await utils.takeScreenshot(page, `page_capture_afterEach_${Date.now()}`);
+    test.afterEach(async ({ page, utils }) => {
+      console.log('🔵 [HOOK] afterEach ejecutado');
+      //await utils.takeScreenshot(page, `page_capture_afterEach_${Date.now()}`);
     });
 
     test.beforeAll(async () => {
-        console.log('🔵 [HOOK] beforeAll ejecutado');
+      console.log('🔵 [HOOK] beforeAll ejecutado');
     });
 
     test.afterAll(async () => {
       console.log('🔵 [HOOK] afterAll ejecutado');
     });
-  } 
+  }
 }
