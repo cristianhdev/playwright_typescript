@@ -4,3 +4,4 @@ node_modules/
 /playwright/.cache/
 /downloads/
 /screenshots/
+/workflows/copilot-setup-steps.yml
