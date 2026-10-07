@@ -17,10 +17,12 @@ test('usuario puede cargar y validar un archivo', async ({ page }) => {
 
   const fileInput = page.getByLabel('File input');
   const fileContent = 'Contenido de prueba para cargar';
+  const fileBuffer = Uint8Array.from(new TextEncoder().encode(fileContent));
+
   await fileInput.setInputFiles({
     name: 'archivo-prueba.txt',
     mimeType: 'text/plain',
-    buffer: Buffer.from(fileContent),
+    buffer: fileBuffer,
   });
 
   const selectedFile = await fileInput.evaluate(async (element) => {

@@ -1,15 +1,10 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures/pages.fixture';
+
 import { Hooks } from '../hooks/init';
 
 Hooks.init();
 
-/*test.afterEach(async () => {
-  await fs.rm('downloads', {
-    recursive: true,
-    force: true,
-  });
-});]*/
 
 //usuario puede agregar tareas a la lista
 

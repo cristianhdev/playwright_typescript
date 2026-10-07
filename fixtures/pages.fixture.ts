@@ -3,6 +3,7 @@ import { WebPage } from '../pages/webpage';
 import {Utils as tools} from '../commons/utils';
 
 
+
 type Pages = {
   webPage: WebPage;
   utils: tools;
