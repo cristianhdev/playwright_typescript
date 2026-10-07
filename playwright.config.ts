@@ -50,7 +50,7 @@ const config: PlaywrightTestConfig = {
 
     navigationTimeout: 30_000,
     locale: "es-ES",
-    /*testIdAttribute: "data-test",*/
+    testIdAttribute: "data-test",
 
 
     /* Base URL to use in actions like `await page.goto('/')`. */

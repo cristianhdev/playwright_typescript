@@ -1,4 +1,3 @@
-import { TestInfo } from './../node_modules/@playwright/test/node_modules/playwright/types/test.d';
 import { test } from '../fixtures/pages.fixture';
 
 export class Hooks {
@@ -58,8 +57,8 @@ export class Hooks {
 
     });
 
-    test.afterAll(async () => {
-
+    test.afterAll(async ({page}) => {
+      page.close();
     });
   }
 }

@@ -3,7 +3,7 @@ import { test } from '../fixtures/pages.fixture';
 
 import { Hooks } from '../hooks/init';
 
-Hooks.init();
+//Hooks.init();
 
 
 //usuario puede agregar tareas a la lista
