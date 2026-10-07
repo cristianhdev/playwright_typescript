@@ -23,8 +23,4 @@ loginTestCases.forEach(({ username, password, expectedTitle, dataTest }) => {
       await expect(page.getByTestId(dataTest)).toHaveText(expectedTitle);
     });
   });
-  test.afterAll(async ({ page }) => {
-    console.log(`Cerrando la página después de los tests para el usuario: ${username}`);
-    page.close();
-  });
 });
