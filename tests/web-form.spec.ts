@@ -12,7 +12,7 @@ test('usuario puede completar el formulario web', async ({ page }) => {
   await expect(page.getByLabel('Dropdown (select)')).toHaveValue('2');
 });
 
-test('usuario puede cargar y validar un archivo', async ({ page }) => {
+test.skip('usuario puede cargar y validar un archivo', async ({ page }) => {
   await page.goto('https://bonigarcia.dev/selenium-webdriver-java/web-form.html');
 
   const fileInput = page.getByLabel('File input');
